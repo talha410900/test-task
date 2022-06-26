@@ -1,5 +1,6 @@
 import React from 'react';
 import BooksContext from '../context/BooksContext';
+import { Badge } from 'react-bootstrap';
 
 import { useCSVReader } from 'react-papaparse';
 
@@ -26,11 +27,14 @@ const styles = {
     },
 };
 
-export default function CSVReader() {
+export default function CSVImport() {
+
     const { CSVReader } = useCSVReader();
     const [csvList, setCsvList] = React.useState([])
+    const [columns, setColumns] = React.useState([])
 
-    const { books, setBooks } = React.useContext(BooksContext);
+
+    const { setBooks } = React.useContext(BooksContext);
 
     function handlePopulateData() {
         setBooks(csvList);
@@ -38,12 +42,14 @@ export default function CSVReader() {
 
     return (
         <div >
+            <h5 className='text-center text-white'> <span className='text-danger'>*</span>Only CSV file supported</h5>
             <CSVReader
                 config={{
                     header: true
                 }}
                 onUploadAccepted={(results) => {
-                    console.log(results)
+                    const getColumns = Object.keys(results.data[0])
+                    setColumns(getColumns)
                     setCsvList(results.data)
                 }}
             >
@@ -56,7 +62,7 @@ export default function CSVReader() {
                     <>
                         <div style={styles.csvReader}>
                             <button type='button' {...getRootProps()} className='btn btn-info'>
-                                Browse file
+                                Import File
                             </button>
                             <div style={styles.acceptedFile}>
                                 {acceptedFile && acceptedFile.name}
@@ -66,6 +72,8 @@ export default function CSVReader() {
                             </button>}
                             {csvList.length > 0 && <button {...getRemoveFileProps()} onClick={() => {
                                 setCsvList([])
+                                setColumns([])
+
                             }} className='btn btn-danger ml-1'>
                                 Remove
                             </button>}
@@ -74,6 +82,20 @@ export default function CSVReader() {
                     </>
                 )}
             </CSVReader>
+
+            {csvList.length > 0 && <>
+                <h5 className='text-white'> Total Row:{csvList.length}</h5>
+            </>}
+            {columns.length > 0 && <>
+                <h5 className='text-white'> Columns Found :</h5>
+                <div className='d-flex' alignItems='center' >
+                    {columns.map((column, index) => {
+                        return (
+                            <Badge key={index} className='m-2 bg-success text-white p-2'>{column}</Badge>
+                        )
+                    })}
+                </div>
+            </>}
         </div>
     );
 }

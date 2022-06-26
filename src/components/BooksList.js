@@ -1,9 +1,11 @@
 import React, { useContext } from 'react';
 import _ from 'lodash';
+import { useCSVDownloader } from 'react-papaparse';
 import Book from './Book';
 import BooksContext from '../context/BooksContext';
 import CSVImport from './CSVImport';
 const BooksList = () => {
+  const { CSVDownloader } = useCSVDownloader();
   const { books, setBooks } = useContext(BooksContext);
 
   const handleRemoveBook = (id) => {
@@ -14,7 +16,15 @@ const BooksList = () => {
     <React.Fragment>
 
       <CSVImport />
-
+      {books.length > 0 && <div className='d-flex justify-content-center my-3'>
+        <CSVDownloader
+          className='btn btn-success'
+          filename={`Books List ${new Date().toLocaleString()}`}
+          data={books}
+        >
+          Download
+        </CSVDownloader>
+      </div>}
       <div className="book-list">
         {!_.isEmpty(books) ? (
           <>

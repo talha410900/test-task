@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Form, Button } from 'react-bootstrap';
+import swal from 'sweetalert';
 import { v4 as uuidv4 } from 'uuid';
 
 const BookForm = (props) => {
@@ -17,11 +18,11 @@ const BookForm = (props) => {
 
   const handleOnSubmit = (event) => {
     event.preventDefault();
-    const values = [bookname, author, price, quantity];
+    const values = [bookname, author];
 
     const allFieldsFilled = values.every((field) => {
       const value = `${field}`.trim();
-      return value !== '' && value !== '0';
+      return value.length > '6';
     });
 
     if (allFieldsFilled) {
@@ -31,37 +32,25 @@ const BookForm = (props) => {
         author,
         price,
         quantity,
-        date: new Date()
+        date: new Date().toLocaleString()
       };
       props.handleOnSubmit(book);
+    } else {
+      swal({
+        title: "Input Error!",
+        text: " Book & Author Name should be of minimum 6 characters",
+        icon: "warning",
+        buttons: 'OK',
+        dangerMode: true,
+      })
     }
   };
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    switch (name) {
-      case 'quantity':
-        if (parseInt(value) === +value) {
-          setBook((prevState) => ({
-            ...prevState,
-            [name]: value
-          }));
-        }
-        break;
-      case 'price':
-        if (value.match(/^\d{1,}(\.\d{0,2})?$/)) {
-          setBook((prevState) => ({
-            ...prevState,
-            [name]: value
-          }));
-        }
-        break;
-      default:
-        setBook((prevState) => ({
-          ...prevState,
-          [name]: value
-        }));
-    }
+    setBook({
+      ...book, [name]: value
+    })
   };
 
   return (
@@ -98,6 +87,8 @@ const BookForm = (props) => {
             required={true}
             type="number"
             name="quantity"
+            min={1}
+            max={1000}
             value={quantity}
             placeholder="Enter available quantity"
             onChange={handleInputChange}
@@ -108,8 +99,9 @@ const BookForm = (props) => {
           <Form.Control
             className="input-control"
             required={true}
-            type="text"
+            type="number"
             name="price"
+            min={0}
             value={price}
             placeholder="Enter price of book"
             onChange={handleInputChange}
