@@ -22,7 +22,7 @@ const BookForm = (props) => {
 
     const allFieldsFilled = values.every((field) => {
       const value = `${field}`.trim();
-      return value.length > '6';
+      return value.length > '5';
     });
 
     if (allFieldsFilled) {
@@ -101,7 +101,7 @@ const BookForm = (props) => {
             required={true}
             type="number"
             name="price"
-            min={0}
+            min={1}
             value={price}
             placeholder="Enter price of book"
             onChange={handleInputChange}

@@ -22,7 +22,7 @@ const BooksList = () => {
           filename={`Books List ${new Date().toLocaleString()}`}
           data={books}
         >
-          Download
+          Download List
         </CSVDownloader>
       </div>}
       <div className="book-list">

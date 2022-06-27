@@ -84,7 +84,7 @@ export default function CSVImport() {
             </CSVReader>
 
             {csvList.length > 0 && <>
-                <h5 className='text-white'> Total Row:{csvList.length}</h5>
+                <h5 className='text-white'> Rows Found:{csvList.length}</h5>
             </>}
             {columns.length > 0 && <>
                 <h5 className='text-white'> Columns Found :</h5>
